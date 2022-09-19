@@ -62,13 +62,9 @@ class Color:
     # is encoded as an int 0xAABBGGRR rather than a tuple. The branching
     # here is to alleviate the need for students to worry about converting.
     def red(color):
-#        print("getting red")
         if isinstance(color, int):
-#            print("color is an int, returning {:x}".format(color & 0x000000FF))
             return color & 0x000000FF
         else:
-#            (a, b, g, r) = color
-#            print("color is ({:x}, {:x}, {:x}, {:x}), returning {:x}".format(a, b, g, r, color.r))
             return color.r
 
     def green(color):
