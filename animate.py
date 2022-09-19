@@ -38,15 +38,9 @@ class Color:
     # Representing colors using pygame.Color
 
     def make(red, green, blue, alpha=255):
-#        c = (((((alpha << 4) | blue) << 4) | green) << 4) | red
         return pygame.Color((red, green, blue, alpha))
-   
-    # Seems to be some issue here. i = 0xAARRGGBB where AA is alpha?
-    # When reading from a png array, i seems to be 0xRRGGBBAA...
-    def fromInteger(i):
-        (a, b, g, r) = pygame.Color(i)    # These seem to be backwards!
-        return Color.make(r, g, b, a)
-     
+
+# A few built-in colors.
     Red   =      make(0xFF,    0,    0)
     Green =      make(   0, 0xFF,    0)
     Blue  =      make(   0,    0, 0xFF)
@@ -84,11 +78,6 @@ class Color:
             return color & 0xFF000000 >> 24
         else:
             return color.a
-
-#    def red(color):   return color.r
-#    def green(color): return color.g
-#    def blue(color):  return color.b
-#    def alpha(color): return color.a
 
     def random():
         return Color.make(random.randint(0, 0xFF),
