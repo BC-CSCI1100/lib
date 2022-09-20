@@ -264,20 +264,22 @@ class Animate():
                             model = touchUpdate(model, xy, Touch.Down)
                         if event.type == pygame.KEYDOWN:
                             keyname = pygame.key.name(event.key)
-                            model = keyUpdate(model, keyname)                            
-            
+                            model = keyUpdate(model, keyname)
+
                 clock.tick(rate)
                 finished = stopWhen(model)
-            else: 
+            else:
                 # All done
                 image = viewLast(model)
                 Image.render(display, [(image, 0, 0)])
                 pygame.display.update()
-                
+
                 for event in pygame.event.get():
                     if event.type == QUIT:
                         pygame.quit()
                         sys.exit()
+                time.sleep(10)
+                raise SystemExit
 
     def show(path):
         image = Image.read(path)
@@ -286,4 +288,4 @@ class Animate():
                       height = height,
                       viewLast = lambda _ : image,
                       stopWhen = lambda _ : True)
-        
+
