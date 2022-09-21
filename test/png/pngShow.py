@@ -1,10 +1,10 @@
-from animate import *
-
-# CSCI 1101 Computer Science 1
+# CSCI 1100 Gateway to Computer Science
 #
 # This program displays a PNG image.
 #
 # run: python3 pngShow.py pngfile
+
+from animate import *
 
 def go():
     if len(sys.argv) == 2:

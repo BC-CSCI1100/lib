@@ -14,7 +14,7 @@ def toggle(state):
 
 # Use a Python class to define a simple record structure with two named fields.
 class Model():
-    def __init__(self, paused=True, x=0):
+    def __init__(self, paused=False, x=0):
         self.paused = paused
         self.x = x
 
@@ -43,7 +43,7 @@ def touchUpdate(model, xy, event):
 def finished(model):
     return False
 
-initialModel = Model(paused=True, x=0)
+initialModel = Model(paused=False, x=0)
 
 Animate.start(model=initialModel,
               view=view,               # model -> image

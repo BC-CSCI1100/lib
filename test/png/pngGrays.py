@@ -1,7 +1,6 @@
-# CSCI 1101 Computer Science 1
+# CSCI 1100 Gateway to Computer Science
 #
-# This program displays an NxN grid of randomly colored squares.
-# Clicking stops or starts.
+# This program displays a color image, then black and white, then halftone.
 #
 # run: python3 pngGrays.py filename.png
 
@@ -35,26 +34,26 @@ def view(model):
 # blackAndWhite : image * int * int -> image
 def blackAndWhite(image, width, height):
     pixels = Image.toArray(image)
-    for col in range(width):
-        for row in range(height):
-            color = Color.fromInteger(pixels[col][row])
+    for row in range(height):
+        for col in range(width):
+            color = pixels[row][col]
             red   = Color.red(color)
             green = Color.green(color)
             blue  = Color.blue(color)
-            gray  = (red + green + blue) / 3.0
-            pixels[col][row] = Color.make(gray, gray, gray) 
+            gray  = (red + green + blue) // 3
+            pixels[row][col] = Color.make(gray, gray, gray) 
     return Image.fromArray(pixels)
 
 # halfTone : image * int * int -> image
 def halfTone(image, width, height):
     pixels = Image.toArray(image)
-    for col in range(width):
-        for row in range(height):
-            (r, _, _, _) = Color.fromInteger(pixels[col][row])
-            ht = Color.Black if r < 128 else Color.White
-            pixels[col][row] = ht
+    for row in range(height):
+        for col in range(width):
+            red = Color.red(pixels[row][col])
+            ht = Color.Black if red < 128 else Color.White
+            pixels[row][col] = ht
     return Image.fromArray(pixels)
-            
+
 # touchUpdate : model -> (int * int) -> event -> model
 def touchUpdate(model, xy, event):
     if event == Touch.Up:
