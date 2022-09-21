@@ -225,7 +225,7 @@ class Animate():
               height=HEIGHT,
               view=defaultView,               # model -> Image
               tickUpdate=defaultTickUpdate,   # model -> model
-              touchUpdate=defaultTouchUpdate, # model * x * y * UP/DOWN -> model
+              touchUpdate=defaultTouchUpdate, # model * xy * UP/DOWN -> model
               keyUpdate=defaultKeyUpdate,     # model * keyname -> model
               stopWhen=defaultStopWhen,       # model -> boolean
               viewLast=defaultViewLast,       # model -> Image
@@ -241,7 +241,9 @@ class Animate():
 
         finished = stopWhen(model)
 
-        while True:
+        makeFinalImage = True
+        running = True
+        while running:
             if not finished:
                 image = view(model)
                 Image.render(display, [(image, 0, 0)])   # (0, 0) upper left
@@ -269,8 +271,10 @@ class Animate():
                 clock.tick(rate)
                 finished = stopWhen(model)
             else:
-                # All done
-                image = viewLast(model)
+                # All done - makeFinalImage prevents repeated calls to viewLast
+                if makeFinalImage:
+                    image = viewLast(model)
+                    makeFinalImage = False
                 Image.render(display, [(image, 0, 0)])
                 pygame.display.update()
 
@@ -278,8 +282,6 @@ class Animate():
                     if event.type == QUIT:
                         pygame.quit()
                         sys.exit()
-                time.sleep(10)
-                raise SystemExit
 
     def show(path):
         image = Image.read(path)
