@@ -1,16 +1,16 @@
-# CSCI 1101 Computer Science 1
+# CSCI 1100 Gateway to Computer Science
 #
 # This program displays an animation of Conway's game of life.
 # Clicking stops or starts.
 #
-# run: python3 life.py inputfile
+# run: python3 life.py inputfile.txt
 
 import importlib
 from animate import *
 from enum import Enum
 import sys
 
-PACE = 0.1
+PACE = 0.05
 
 # Backgrounds
 
@@ -18,13 +18,12 @@ AliveColor = Color.Orange
 NotAliveColor = Color.White
 BackgroundColor = Color.White
 
-# Make a splash panel with instructions.
-_ins1 = Image.text("Click to start/stop.", Color.DarkGray, size=40)
-_ins2 = Image.text("Up arrow to speed up, Down to slow.", Color.DarkGray, size=40)
-_splshpanel = Image.rectangle(WIDTH, 150, BackgroundColor)
-_splsh1 = Image.placeImage(_ins1, (WIDTH // 2 - 150, 25), _splshpanel)
-splashPanel = Image.placeImage(_ins2, (WIDTH // 2 - 325, 75), _splsh1)
-
+# Make splash panels with instructions.
+_ins1 = Image.text("Click to start/stop", Color.White, size=50)
+_ins2 = Image.text("^/v to speed up/slow down", Color.White, size=50)
+backSplash = Image.rectangle(WIDTH, HEIGHT, Color.DarkGray)
+splash1    = Image.placeImage(_ins1, (WIDTH // 2 - 225, HEIGHT // 2 - 30), backSplash)
+splash2    = Image.placeImage(_ins2, (WIDTH // 2 - 350, HEIGHT // 2 - 30), backSplash)
 
 # Inhabited cells are either alive or not alive
 class Status(Enum):
@@ -39,12 +38,14 @@ def colorOf(status):
 
 class State(Enum):
     Ready   = 0
-    Running = 1
-    Paused  = 2
+    Launch  = 1
+    Running = 2
+    Paused  = 3
 
 # transition : state -> state
 def transition(state):
-    if state == State.Ready:   return State.Running
+    if state == State.Ready:   return State.Launch
+    if state == State.Launch:  return State.Running
     if state == State.Running: return State.Paused
     if state == State.Paused:  return State.Running
 
@@ -76,7 +77,9 @@ def view(model):
                 model.image = Image.placeImage(img, (x, y), model.image)
 
     if model.state == State.Ready:
-        return Image.placeImage(splashPanel, (0, HEIGHT - 150), model.image)
+        return splash1
+    if model.state == State.Launch:
+        return splash2
     else:
         return model.image
     
