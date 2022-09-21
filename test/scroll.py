@@ -3,79 +3,50 @@
 # This program scrolls a string left to right. Arrow keys
 # alter the location of the string.
 #
-# run: python3 scroll.py
-
-import os
+# run: python3 scroll2.py
 
 from animate import *
 from enum import Enum
 
-os.environ['DISPLAY'] = ': 0.0'
-
-backing = Image.rectangle(WIDTH, HEIGHT, Color.Red)
-text = Image.text("CSCI 1100", Color.White, size=50)
-
-# An enumeration of states.
-class State(Enum):
-    Stop = 0
-    Start = 1
-
 # toggle : state -> state
 def toggle(state):
-    if state == State.Stop:
-        return State.Start
-    else:
-        return State.Stop
+    return not(state)
 
-# Using a class here to define a record -- only creation and field projection.
+# Use a Python class to define a simple record structure with two named fields.
 class Model():
-    def __init__(self, x, y, state):
+    def __init__(self, paused=True, x=0):
+        self.paused = paused
         self.x = x
-        self.y = y
-        self.state = state
 
 # view : model -> image
-def view(model): 
-    return Image.placeImage(text, (model.x, model.y), backing)
+def view(model):
+    backing = Image.rectangle(WIDTH, HEIGHT, Color.Red)
+    text    = Image.text("Gateway", Color.White, size=100)
+    return Image.placeImage(text, (model.x, 325), backing)
 
 # tickUpdate : model -> model
 def tickUpdate(model):
-    if model.state == State.Start:
-        if model.x > WIDTH:
-            model.x = -200
-        return Model(model.x + 3, model.y, model.state)
-    else:
+    if model.paused:
         return model
-    
+    else:
+        x = model.x + 3 if model.x < WIDTH else -400
+        return Model(paused=model.paused, x=x)
+
 # touchUpdate : model * (x, y) * event -> model
 def touchUpdate(model, xy, event):
     if event == Touch.Up:
-        return Model(model.x, model.y, toggle(model.state))
+        return Model(paused=toggle(model.paused), x=model.x)
     else:
         return model
 
-# keyUpdate : model * keyname -> model    
-def keyUpdate(model, key):
-    if key == "left":
-        return Model(model.x - 10, model.y, model.state)
-    if key == "right":
-        return Model(model.x + 10, model.y, model.state)
-    if key == "up":
-        return Model(model.x, model.y - 10, model.state)
-    if key == "down":
-        return Model(model.x, model.y + 10, model.state)
-    else:
-        return model
-
-# finished : model -> boolean    
+# finished : model -> boolean
 def finished(model):
     return False
 
-initialModel = Model(0, 375, State.Start)
+initialModel = Model(paused=True, x=0)
 
 Animate.start(model=initialModel,
               view=view,               # model -> image
               tickUpdate=tickUpdate,   # model -> model
               touchUpdate=touchUpdate, # model * (x, y) * event -> model
-              keyUpdate=keyUpdate,     # model * keyname -> model
               stopWhen=finished)       # model -> boolean
